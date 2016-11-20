@@ -4,12 +4,17 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.parse.LogInCallback;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseCloud;
+import com.parse.ParseException;
 import com.parse.ParsePush;
+import com.parse.ParseUser;
 
 import java.util.HashMap;
 
@@ -21,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (ParseUser.getCurrentUser() != null) {
+            startWithCurrentUser();
+        } else {
+            login();
+        }
         ParsePush.subscribeInBackground("channelName");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -48,6 +59,22 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private void login() {
+        ParseAnonymousUtils.logIn(new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e != null) {
+                    Log.e("DEBUG", "Anonymous login failed: ", e);
+                } else {
+                    startWithCurrentUser();
+                }
+            }
+        });
+    }
+
+    private void startWithCurrentUser() {
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
