@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
             login();
         }
 
+
         ParsePush.subscribeInBackground("android-2016");
 
 
